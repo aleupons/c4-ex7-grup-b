@@ -1,11 +1,10 @@
 const Persona = require("../models/Persona");
 
 const validarDni = (dni) => {
-  const numero = parseInt(dni.slice(0, 7), 10);
+  const numero = parseInt(dni.slice(0, 8), 10);
   const letra = dni.slice(-1);
   const letras = "TRWAGMYFPDXBNJZSQVHLCKET";
   if (
-    !!numero ||
     numero > 99999999 ||
     dni.length !== 9 ||
     letras.charAt(numero % 23) !== letra.toUpperCase()
@@ -29,7 +28,7 @@ const validarFecha = (stringFecha) => {
 
 const introducirPersonaVacunada = async (
   dni,
-  centroVacunacion,
+  puntoVacunacion,
   vacuna,
   fechaPrimeraDosis,
   fechaSegundaDosis
@@ -37,7 +36,7 @@ const introducirPersonaVacunada = async (
   try {
     const nuevaPersona = await Persona.create({
       dni: validarDni(dni),
-      centroVacunacion,
+      puntoVacunacion,
       vacuna,
       fechaPrimeraDosis: validarFecha(fechaPrimeraDosis),
       ...(vacuna.dosis === 2 && {

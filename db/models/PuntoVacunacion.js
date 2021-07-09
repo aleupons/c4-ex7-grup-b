@@ -7,26 +7,18 @@ const PuntoVacunacion = {
   },
   localizacion: {
     coordenadas: {
-      type: [
-        {
-          type: Number,
-          required: true,
-        },
-      ],
+      type: Number,
       required: true,
     },
     direccion: {
       type: String,
       required: true,
     },
-    required: true,
   },
-  vacunas: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Vacuna",
-    },
-  ],
+  vacunas: {
+    type: Schema.Types.ObjectId,
+    ref: "Vacuna",
+  },
 };
 
 module.exports = PuntoVacunacion;

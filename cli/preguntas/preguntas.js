@@ -1,4 +1,14 @@
-const preguntas = [
+const inquirer = require("inquirer");
+const {
+  introducirPersonaVacunada,
+} = require("../../db/controladores/personas");
+const {
+  listarPuntosVacunacion,
+  getPuntoVacunacion,
+} = require("../../db/controladores/puntosVacunacion");
+const { listarVacunas, getVacuna } = require("../../db/controladores/vacunas");
+
+const preguntasGenerales = [
   {
     name: "opcion",
     message: "Opciones",
@@ -11,134 +21,85 @@ const preguntas = [
       },
     ],
   },
-  {
-    name: "centroVacunacion",
-    message: "¿En que centro de vacunación se distribuira la vacuna?",
-    type: "list",
-    choices: [
-      { value: "santIsidor", name: "Sant Isidor- Centre vacunal CAPSBE" },
-      {
-        value: "firaDeBarcelona",
-        name: "Fira de Barcelona",
-      },
-    ],
-    when: (respuestaAnterior) =>
-      respuestaAnterior.opcion === "introducirVacunas",
-  },
-  {
-    name: "vacuna",
-    message: "¿Cual de las vacunas van a distribuir?",
-    type: "list",
-    choices: [
-      { value: "vacunaPfizer", name: "Vacuna Pfizer" },
-      {
-        value: "vacunaPfizer",
-        name: "Vacuna Pfizer",
-      },
-    ],
-    when: (respuestaAnterior) =>
-      respuestaAnterior.opcion === "introducirVacunas",
-  },
-  {
-    name: "anyadirOtraVacuna",
-    message: "¿Deseas añadir otra vacuna?",
-    type: "confirm",
-    when: (respuestaAnterior) =>
-      respuestaAnterior.opcion === "introducirVacunas",
-  },
-  {
-    name: "dni",
-    message: "Por favor inidique su DNI:",
-    type: "input",
-    when: (respuestaAnterior) =>
-      respuestaAnterior.opcion === "introducirPersonasVacunadas",
-  },
-  {
-    name: "elegirCentroVacunacion",
-    message: "¿En que centro ha sido o sera vacunado?:",
-    type: "list",
-    choices: [
-      { value: "santIsidor", name: "Sant Isidor- Centre vacunal CAPSBE" },
-      {
-        value: "firaDeBarcelona",
-        name: "Fira de Barcelona",
-      },
-    ],
-    when: (respuestaAnterior) =>
-      respuestaAnterior.opcion === "introducirPersonasVacunadas",
-  },
-  {
-    name: "vacunaCentro",
-    message: "vacuna: (listado con las vacunas del centro seleccionado)",
-    type: "list",
-    choices: [
-      { value: "vacunaPfizer", name: "Vacuna Pfizer" },
-      {
-        value: "vacunaPfizer",
-        name: "Vacuna Pfizer",
-      },
-    ],
-    when: (respuestaAnterior) =>
-      respuestaAnterior.opcion === "introducirPersonasVacunadas",
-  },
-  {
-    name: "fechaPrimeraDosis",
-    message: "Fecha primera dosis: ",
-    type: "input",
-    when: (respuestaAnterior) =>
-      respuestaAnterior.opcion === "introducirPersonasVacunadas",
-  },
-  {
-    name: "fechaSegundaDosis",
-    message: "Fecha segunda dosis: ",
-    type: "input",
-    when: (respuestaAnterior) =>
-      respuestaAnterior.opcion === "introducirPersonasVacunadas",
-  },
 ];
+
+const preguntarVacuna = async (ciudad) => {
+  const preguntasVacuna = await inquirer.prompt([
+    {
+      name: "centroVacunacion",
+      message: "¿En que centro de vacunación se distribuira la vacuna?",
+      type: "list",
+      choices: await listarPuntosVacunacion(ciudad),
+    },
+    {
+      name: "vacuna",
+      message: "¿Cual de las vacunas van a distribuir?",
+      type: "list",
+      choices: await listarVacunas(),
+    },
+    {
+      name: "anyadirOtraVacuna",
+      message: "¿Deseas añadir otra vacuna?",
+      type: "confirm",
+    },
+  ]);
+  // introducirVacuna
+  if (preguntasVacuna.anyadirOtraVacuna) {
+    await preguntarVacuna();
+  }
+  return preguntasVacuna;
+};
+
+const preguntarPersona = async (ciudad) => {
+  const preguntasPersona = await inquirer.prompt([
+    {
+      name: "dni",
+      message: "Por favor inidique su DNI:",
+      type: "input",
+    },
+    {
+      name: "elegirCentroVacunacion",
+      message: "¿En que centro ha sido o sera vacunado?:",
+      type: "list",
+      choices: await listarPuntosVacunacion(ciudad),
+    },
+    {
+      name: "vacunaCentro",
+      message: "Vacuna: (listado con las vacunas del centro seleccionado)",
+      type: "list",
+      choices: await listarVacunas(),
+    },
+    {
+      name: "fechaPrimeraDosis",
+      message: "Fecha primera dosis: ",
+      type: "input",
+    },
+    {
+      name: "fechaSegundaDosis",
+      message: "Fecha segunda dosis: ",
+      type: "input",
+    },
+    {
+      name: "anyadirOtraPersona",
+      message: "¿Deseas añadir otra persona vacunada?",
+      type: "confirm",
+    },
+  ]);
+  introducirPersonaVacunada(
+    preguntasPersona.dni,
+    await getPuntoVacunacion(preguntasPersona.elegirCentroVacunacion),
+    await getVacuna(preguntasPersona.vacunaCentro),
+    preguntasPersona.fechaPrimeraDosis,
+    preguntasPersona.fechaSegundaDosis
+  );
+  if (preguntasPersona.anyadirOtraPersona) {
+    await preguntarPersona();
+  }
+  return preguntasPersona;
+};
 
 module.exports = {
-  preguntas,
+  preguntasGenerales,
+  preguntarVacuna,
+  preguntarPersona,
 };
-
-/* const preguntasPreguntas = () => {
-  if (preguntas.preguntas.choices[0]) {
-    const preguntasVacunas = [
-      preguntas[0],
-      ...preguntas.slice(1, 3).map((pregunta) => ({
-        ...pregunta,
-        when: (respuestasAnteriores) =>
-          respuestasAnteriores.tipoTransporte === "introducirVacunas",
-      })),
-    ];
-    return preguntasVacunas;
-  } else if (preguntas.preguntas.choices[1]) {
-    const preguntasIntroducirVacunas = [
-      preguntas[0],
-      ...preguntas.slice(3).map((pregunta) => ({
-        ...pregunta,
-        when: (respuestasAnteriores) =>
-          respuestasAnteriores.tipoTransporte === "introducirPersonasVacunadas",
-      })),
-    ];
-    return preguntasIntroducirVacunas;
-  }
-};
-
-const preguntasVacunas = [
-  preguntas[0],
-  ...preguntas.slice(1, 3).map((pregunta) => ({
-    ...pregunta,
-    when: (respuestasAnteriores) =>
-      respuestasAnteriores.tipoTransporte === "introducirVacunas",
-  })),
-];
-
-const preguntasIntroducirVacunas = [
-  preguntas[0],
-  ...preguntas.slice(3).map((pregunta) => ({
-    ...pregunta,
-    when: (respuestasAnteriores) =>
-      respuestasAnteriores.tipoTransporte === "introducirPersonasVacunadas",
-  })),
-]; */

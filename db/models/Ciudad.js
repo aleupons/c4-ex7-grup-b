@@ -6,10 +6,7 @@ const CiudadSchema = new Schema({
     type: String,
     required: true,
   },
-  puntosVacunacion: {
-    type: [PuntoVacunacion],
-    required: true,
-  },
+  puntosVacunacion: PuntoVacunacion,
 });
 
 const Ciudad = model("Ciudad", CiudadSchema, "ciudades");
