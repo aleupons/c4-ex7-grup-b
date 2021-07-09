@@ -1,3 +1,5 @@
+const { Schema } = require("mongoose");
+
 const PuntoVacunacion = {
   nombre: {
     type: String,
