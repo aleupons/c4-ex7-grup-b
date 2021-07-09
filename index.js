@@ -1,5 +1,8 @@
 const { preguntar } = require("./cli/preguntador");
 const { preguntas } = require("./cli/preguntas/preguntas");
+const {
+  listarPuntosVacunacion,
+} = require("./db/controladores/puntoVacunacion");
 
 const hazPreguntas = async () => {
   const respuestas = await preguntar(preguntas);
@@ -8,4 +11,5 @@ const hazPreguntas = async () => {
 
 (async () => {
   await hazPreguntas();
+  await listarPuntosVacunacion();
 })();
