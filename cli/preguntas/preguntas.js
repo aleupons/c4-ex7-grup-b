@@ -13,7 +13,7 @@ const preguntas = [
   },
   {
     name: "centroVacunacion",
-    message: "centro de vacunacion:",
+    message: "¿En que centro de vacunación se distribuira la vacuna?",
     type: "list",
     choices: [
       { value: "santIsidor", name: "Sant Isidor- Centre vacunal CAPSBE" },
@@ -27,7 +27,7 @@ const preguntas = [
   },
   {
     name: "vacuna",
-    message: "vacuna:",
+    message: "¿Cual de las vacunas van a distribuir?",
     type: "list",
     choices: [
       { value: "vacunaPfizer", name: "Vacuna Pfizer" },
@@ -41,7 +41,7 @@ const preguntas = [
   },
   {
     name: "anyadirOtraVacuna",
-    message: "¿Añadir otra vacuna?",
+    message: "¿Deseas añadir otra vacuna?",
     type: "confirm",
     when: (respuestaAnterior) =>
       respuestaAnterior.opcion === "introducirVacunas",
@@ -55,7 +55,7 @@ const preguntas = [
   },
   {
     name: "elegirCentroVacunacion",
-    message: "centro de vacunacion:",
+    message: "¿En que centro ha sido o sera vacunado?:",
     type: "list",
     choices: [
       { value: "santIsidor", name: "Sant Isidor- Centre vacunal CAPSBE" },
