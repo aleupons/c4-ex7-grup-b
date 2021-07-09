@@ -50,4 +50,4 @@ const introducirPersonaVacunada = async (
   }
 };
 
-module.exports = introducirPersonaVacunada;
+module.exports = { introducirPersonaVacunada };
