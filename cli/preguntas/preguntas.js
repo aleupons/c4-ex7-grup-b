@@ -96,3 +96,49 @@ const preguntas = [
       respuestaAnterior.opcion === "introducirPersonasVacunadas",
   },
 ];
+
+module.exports = {
+  preguntas,
+};
+
+/* const preguntasPreguntas = () => {
+  if (preguntas.preguntas.choices[0]) {
+    const preguntasVacunas = [
+      preguntas[0],
+      ...preguntas.slice(1, 3).map((pregunta) => ({
+        ...pregunta,
+        when: (respuestasAnteriores) =>
+          respuestasAnteriores.tipoTransporte === "introducirVacunas",
+      })),
+    ];
+    return preguntasVacunas;
+  } else if (preguntas.preguntas.choices[1]) {
+    const preguntasIntroducirVacunas = [
+      preguntas[0],
+      ...preguntas.slice(3).map((pregunta) => ({
+        ...pregunta,
+        when: (respuestasAnteriores) =>
+          respuestasAnteriores.tipoTransporte === "introducirPersonasVacunadas",
+      })),
+    ];
+    return preguntasIntroducirVacunas;
+  }
+};
+
+const preguntasVacunas = [
+  preguntas[0],
+  ...preguntas.slice(1, 3).map((pregunta) => ({
+    ...pregunta,
+    when: (respuestasAnteriores) =>
+      respuestasAnteriores.tipoTransporte === "introducirVacunas",
+  })),
+];
+
+const preguntasIntroducirVacunas = [
+  preguntas[0],
+  ...preguntas.slice(3).map((pregunta) => ({
+    ...pregunta,
+    when: (respuestasAnteriores) =>
+      respuestasAnteriores.tipoTransporte === "introducirPersonasVacunadas",
+  })),
+]; */
