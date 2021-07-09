@@ -45,7 +45,7 @@ const preguntarVacuna = async (ciudad) => {
   ]);
   // introducirVacuna
   if (preguntasVacuna.anyadirOtraVacuna) {
-    await preguntarVacuna();
+    await preguntarVacuna(ciudad);
   }
   return preguntasVacuna;
 };
