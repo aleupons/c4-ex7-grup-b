@@ -1,4 +1,7 @@
 const Vacuna = require("../models/Vacuna");
+const Ciudad = require("../models/Ciudad");
+const { getCiudad } = require("./ciudades");
+const { getPuntoVacunacion } = require("./puntosVacunacion");
 
 const listarVacunas = async () => {
   try {
@@ -21,7 +24,43 @@ const getVacuna = async (nombreVacuna) => {
   }
 };
 
+const introducirVacuna = async (
+  nombreVacuna,
+  nombreCiudad,
+  nombrePuntoVacunacion
+) => {
+  try {
+    const idVacuna = await getVacuna(nombreVacuna);
+    const idCiudad = await getCiudad(nombreCiudad);
+    const puntoVacunacion = await getPuntoVacunacion(nombrePuntoVacunacion);
+    const ciudad = await Ciudad.find({ _id: idCiudad });
+    const puntosVacunacionEncontrados = ciudad
+      .map(({ puntosVacunacion }) => puntosVacunacion)[0]
+      .map((puntoVacunacionRecorrido) => {
+        if (puntoVacunacionRecorrido.nombre === puntoVacunacion.nombre) {
+          if (
+            !puntoVacunacionRecorrido.vacunas.find((vacuna) =>
+              vacuna.equals(idVacuna)
+            )
+          ) {
+            puntoVacunacionRecorrido.vacunas.push(idVacuna);
+          }
+        }
+        return puntoVacunacionRecorrido;
+      });
+    const ciudadModificada = await Ciudad.findByIdAndUpdate(idCiudad, {
+      puntosVacunacion: puntosVacunacionEncontrados,
+    });
+  } catch (error) {
+    console.log(
+      "Error al introducir la vacuna en el punto de vacunación",
+      error.message
+    );
+  }
+};
+
 module.exports = {
   listarVacunas,
   getVacuna,
+  introducirVacuna,
 };

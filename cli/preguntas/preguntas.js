@@ -4,9 +4,11 @@ const {
 } = require("../../db/controladores/personas");
 const {
   listarPuntosVacunacion,
-  getPuntoVacunacion,
 } = require("../../db/controladores/puntosVacunacion");
-const { listarVacunas, getVacuna } = require("../../db/controladores/vacunas");
+const {
+  listarVacunas,
+  introducirVacuna,
+} = require("../../db/controladores/vacunas");
 
 const preguntasGenerales = [
   {
@@ -43,7 +45,11 @@ const preguntarVacuna = async (ciudad) => {
       type: "confirm",
     },
   ]);
-  // introducirVacuna
+  introducirVacuna(
+    preguntasVacuna.vacuna,
+    ciudad,
+    preguntasVacuna.centroVacunacion
+  );
   if (preguntasVacuna.anyadirOtraVacuna) {
     await preguntarVacuna(ciudad);
   }
@@ -87,8 +93,8 @@ const preguntarPersona = async (ciudad) => {
   ]);
   introducirPersonaVacunada(
     preguntasPersona.dni,
-    await getPuntoVacunacion(preguntasPersona.elegirCentroVacunacion),
-    await getVacuna(preguntasPersona.vacunaCentro),
+    preguntasPersona.elegirCentroVacunacion,
+    preguntasPersona.vacunaCentro,
     preguntasPersona.fechaPrimeraDosis,
     preguntasPersona.fechaSegundaDosis
   );
