@@ -1,18 +1,17 @@
 const Ciudad = require("../models/Ciudad");
 
-const listarPuntosVacunacion = async (ciudad) => {
+const listarPuntosVacunacion = async (nombreCiudad) => {
   try {
-    const ciudades = await Ciudad.find({ nombre: ciudad });
-    const puntosVacunacionEncontrados = ciudades.map(
-      ({ puntosVacunacion }) => puntosVacunacion.nombre
-    )[0];
-    if (puntosVacunacionEncontrados === undefined) {
-      throw new Error();
-    }
-    return puntosVacunacionEncontrados.map((puntoVacunacion) => ({
-      value: puntoVacunacion,
-      name: puntoVacunacion,
-    }));
+    const ciudad = await Ciudad.find({
+      nombre: nombreCiudad,
+    });
+    const puntosVacunacionCiudad = ciudad
+      .map(({ puntosVacunacion }) => puntosVacunacion)[0]
+      .map(({ nombre }) => ({
+        value: nombre,
+        name: nombre,
+      }));
+    return puntosVacunacionCiudad;
   } catch (err) {
     console.log(
       "No tenemos puntos de vacunación en la base de datos",
@@ -21,17 +20,15 @@ const listarPuntosVacunacion = async (ciudad) => {
   }
 };
 
-// No funciona. No es pot iterar promeses
-const getPuntoVacunacion = async (nombrePunto) => {
+const getPuntoVacunacion = async (nombrePuntoVacunacion) => {
   try {
-    const ciudades = await Ciudad.find();
-    const puntoVacunacionEncontrados = ciudades.find(
-      ({ puntosVacunacion }) => puntosVacunacion.nombre === nombrePunto
-    );
-    if (puntoVacunacionEncontrados === undefined) {
-      throw new Error();
-    }
-    return puntoVacunacionEncontrados.puntosVacunacion;
+    const ciudadConPuntoVacunacion = await Ciudad.find({
+      "puntosVacunacion.nombre": nombrePuntoVacunacion,
+    });
+    const puntoVacunacion = ciudadConPuntoVacunacion
+      .map(({ puntosVacunacion }) => puntosVacunacion)[0]
+      .find(({ nombre }) => nombre === nombrePuntoVacunacion);
+    return puntoVacunacion;
   } catch (err) {
     console.log("No existe la vacuna", err.message);
   }

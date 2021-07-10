@@ -6,15 +6,15 @@ mongoose.connect(
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: true,
+    useFindAndModify: false,
     useCreateIndex: true,
   },
   (err) => {
     if (err) {
       console.log("No se ha podido iniciar la base de datos");
       console.log(err.message);
-      return;
+      /* return; */
     }
-    console.log("Se ha iniciado la base de datos");
+    /* console.log("Se ha iniciado la base de datos"); */
   }
 );

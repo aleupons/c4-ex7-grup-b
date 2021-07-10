@@ -1,4 +1,6 @@
 const Persona = require("../models/Persona");
+const { getPuntoVacunacion } = require("./puntosVacunacion");
+const { getVacuna } = require("./vacunas");
 
 const validarDni = (dni) => {
   const numero = parseInt(dni.slice(0, 8), 10);
@@ -28,20 +30,18 @@ const validarFecha = (stringFecha) => {
 
 const introducirPersonaVacunada = async (
   dni,
-  puntoVacunacion,
-  vacuna,
+  nombrePuntoVacunacion,
+  nombreVacuna,
   fechaPrimeraDosis,
   fechaSegundaDosis
 ) => {
   try {
+    const vacuna = await getVacuna(nombreVacuna);
     const nuevaPersona = await Persona.create({
       dni: validarDni(dni),
-      puntoVacunacion,
+      puntoVacunacion: await getPuntoVacunacion(nombrePuntoVacunacion),
       vacuna,
-      fechaPrimeraDosis: validarFecha(fechaPrimeraDosis),
-      ...(vacuna.dosis === 2 && {
-        fechaSegundaDosis: validarFecha(fechaSegundaDosis),
-      }),
+      dosis: [validarFecha(fechaPrimeraDosis), validarFecha(fechaSegundaDosis)],
     });
     return nuevaPersona;
   } catch (error) {
