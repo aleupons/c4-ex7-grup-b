@@ -15,6 +15,28 @@ const listarVacunas = async () => {
   }
 };
 
+const listarVacunasCentro = async (centro) => {
+  try {
+    const puntoVacunacion = await getPuntoVacunacion(centro);
+    const listaVacunas = await Vacuna.find();
+    const vacunasCentro = listaVacunas.filter(({ _id }) =>
+      puntoVacunacion.vacunas.find((vacuna) => _id.equals(vacuna))
+    );
+    if (vacunasCentro.length === 0) {
+      throw new Error();
+    }
+    return vacunasCentro.map((vacuna) => ({
+      value: vacuna.nombre,
+      name: vacuna.nombre,
+    }));
+  } catch (err) {
+    console.log(
+      `El centro ${centro} no tiene vacunas disponibles`,
+      err.message
+    );
+  }
+};
+
 const getVacuna = async (nombreVacuna) => {
   try {
     const vacuna = await Vacuna.findOne().where("nombre").equals(nombreVacuna);
@@ -61,6 +83,7 @@ const introducirVacuna = async (
 
 module.exports = {
   listarVacunas,
+  listarVacunasCentro,
   getVacuna,
   introducirVacuna,
 };

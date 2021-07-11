@@ -7,6 +7,7 @@ const {
 } = require("../../db/controladores/puntosVacunacion");
 const {
   listarVacunas,
+  listarVacunasCentro,
   introducirVacuna,
 } = require("../../db/controladores/vacunas");
 
@@ -69,11 +70,15 @@ const preguntarPersona = async (ciudad) => {
       type: "list",
       choices: await listarPuntosVacunacion(ciudad),
     },
+  ]);
+  const preguntasPersona2 = await inquirer.prompt([
     {
       name: "vacunaCentro",
       message: "Vacuna: (listado con las vacunas del centro seleccionado)",
       type: "list",
-      choices: await listarVacunas(),
+      choices: await listarVacunasCentro(
+        preguntasPersona.elegirCentroVacunacion
+      ),
     },
     {
       name: "fechaPrimeraDosis",
@@ -94,14 +99,14 @@ const preguntarPersona = async (ciudad) => {
   introducirPersonaVacunada(
     preguntasPersona.dni,
     preguntasPersona.elegirCentroVacunacion,
-    preguntasPersona.vacunaCentro,
-    preguntasPersona.fechaPrimeraDosis,
-    preguntasPersona.fechaSegundaDosis
+    preguntasPersona2.vacunaCentro,
+    preguntasPersona2.fechaPrimeraDosis,
+    preguntasPersona2.fechaSegundaDosis
   );
-  if (preguntasPersona.anyadirOtraPersona) {
+  if (preguntasPersona2.anyadirOtraPersona) {
     await preguntarPersona();
   }
-  return preguntasPersona;
+  return [preguntasPersona, preguntasPersona2];
 };
 
 module.exports = {
