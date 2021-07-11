@@ -41,7 +41,7 @@ const listarVacunasCentro = async (centro) => {
 const getVacuna = async (nombreVacuna) => {
   try {
     const vacuna = await Vacuna.findOne().where("nombre").equals(nombreVacuna);
-    return vacuna._id;
+    return vacuna;
   } catch (err) {
     console.log("No existe la vacuna", err.message);
   }
@@ -53,7 +53,7 @@ const introducirVacuna = async (
   nombrePuntoVacunacion
 ) => {
   try {
-    const idVacuna = await getVacuna(nombreVacuna);
+    const { _id: idVacuna } = await getVacuna(nombreVacuna);
     const idCiudad = await getCiudad(nombreCiudad);
     const puntoVacunacion = await getPuntoVacunacion(nombrePuntoVacunacion);
     const ciudad = await Ciudad.find({ _id: idCiudad });

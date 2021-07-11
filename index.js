@@ -4,6 +4,7 @@ const {
   preguntarVacuna,
   preguntarPersona,
 } = require("./cli/preguntas/preguntas");
+const { getVacuna } = require("./db/controladores/vacunas");
 
 require("./db/index");
 
@@ -19,6 +20,7 @@ const hazPreguntas = async () => {
     }
   } else if (respuestas.opcion === "introducirPersonasVacunadas") {
     const respuestasPersona = await preguntarPersona(ciudad);
+    const a = await getVacuna(respuestasPersona.vacunaCentro);
     if (respuestasPersona === -1 || respuestasPersona.anyadirOtraPersona) {
       await preguntarPersona(ciudad);
     } else {
