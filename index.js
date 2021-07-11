@@ -8,13 +8,25 @@ const {
 require("./db/index");
 
 const hazPreguntas = async () => {
+  const ciudad = "Barcelona";
   const respuestas = await preguntar(preguntasGenerales);
   if (respuestas.opcion === "introducirVacunas") {
-    preguntarVacuna("Barcelona");
+    const respuestasVacuna = await preguntarVacuna(ciudad);
+    if (!respuestasVacuna.anyadirOtraVacuna) {
+      await hazPreguntas();
+    } else {
+      await preguntarVacuna(ciudad);
+    }
   } else if (respuestas.opcion === "introducirPersonasVacunadas") {
-    preguntarPersona("Barcelona");
+    const respuestasPersona = await preguntarPersona(ciudad);
+    if (respuestasPersona === -1 || respuestasPersona.anyadirOtraPersona) {
+      await preguntarPersona(ciudad);
+    } else {
+      await hazPreguntas();
+    }
+  } else if (respuestas.opcion === "salir") {
+    process.exit(0);
   }
-  return respuestas;
 };
 
 (async () => {

@@ -22,6 +22,10 @@ const preguntasGenerales = [
         value: "introducirPersonasVacunadas",
         name: "Introducir personas vacunadas",
       },
+      {
+        value: "salir",
+        name: "Salir",
+      },
     ],
   },
 ];
@@ -46,14 +50,11 @@ const preguntarVacuna = async (ciudad) => {
       type: "confirm",
     },
   ]);
-  introducirVacuna(
+  await introducirVacuna(
     preguntasVacuna.vacuna,
     ciudad,
     preguntasVacuna.centroVacunacion
   );
-  if (preguntasVacuna.anyadirOtraVacuna) {
-    await preguntarVacuna(ciudad);
-  }
   return preguntasVacuna;
 };
 
@@ -76,10 +77,17 @@ const preguntarPersona = async (ciudad) => {
       name: "vacunaCentro",
       message: "Vacuna: (listado con las vacunas del centro seleccionado)",
       type: "list",
-      choices: await listarVacunasCentro(
-        preguntasPersona.elegirCentroVacunacion
-      ),
+      choices:
+        (await listarVacunasCentro(preguntasPersona.elegirCentroVacunacion)) ===
+        undefined
+          ? ["Volver"]
+          : await listarVacunasCentro(preguntasPersona.elegirCentroVacunacion),
     },
+  ]);
+  if (preguntasPersona2.vacunaCentro === "Volver") {
+    return -1;
+  }
+  const preguntasPersona3 = await inquirer.prompt([
     {
       name: "fechaPrimeraDosis",
       message: "Fecha primera dosis: ",
@@ -96,17 +104,14 @@ const preguntarPersona = async (ciudad) => {
       type: "confirm",
     },
   ]);
-  introducirPersonaVacunada(
+  await introducirPersonaVacunada(
     preguntasPersona.dni,
     preguntasPersona.elegirCentroVacunacion,
     preguntasPersona2.vacunaCentro,
-    preguntasPersona2.fechaPrimeraDosis,
-    preguntasPersona2.fechaSegundaDosis
+    preguntasPersona3.fechaPrimeraDosis,
+    preguntasPersona3.fechaSegundaDosis
   );
-  if (preguntasPersona2.anyadirOtraPersona) {
-    await preguntarPersona();
-  }
-  return [preguntasPersona, preguntasPersona2];
+  return { ...preguntasPersona, ...preguntasPersona2, ...preguntasPersona3 };
 };
 
 module.exports = {
