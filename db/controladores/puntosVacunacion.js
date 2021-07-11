@@ -1,10 +1,13 @@
 const Ciudad = require("../models/Ciudad");
 
-const listarPuntosVacunacion = async (nombreCiudad) => {
+const listarPuntosVacunacion = async (nombreCiudad, api) => {
   try {
     const ciudad = await Ciudad.find({
       nombre: nombreCiudad,
     });
+    if (api) {
+      return ciudad.map(({ puntosVacunacion }) => puntosVacunacion)[0];
+    }
     const puntosVacunacionCiudad = ciudad
       .map(({ puntosVacunacion }) => puntosVacunacion)[0]
       .map(({ nombre }) => ({

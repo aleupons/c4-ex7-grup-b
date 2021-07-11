@@ -1,3 +1,4 @@
+require("./servidor");
 const { preguntar } = require("./cli/preguntador");
 const {
   preguntasGenerales,
