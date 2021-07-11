@@ -9,6 +9,16 @@ const getCiudad = async (nombreCiudad) => {
   }
 };
 
+const getNombreCiudad = async (idCiudad) => {
+  try {
+    const ciudad = await Ciudad.findOne().where("_id").equals(idCiudad);
+    return ciudad.nombre;
+  } catch (err) {
+    console.log("No existe la ciudad", err.message);
+  }
+};
+
 module.exports = {
   getCiudad,
+  getNombreCiudad,
 };
