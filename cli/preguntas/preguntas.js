@@ -9,6 +9,7 @@ const {
   listarVacunas,
   listarVacunasCentro,
   introducirVacuna,
+  getVacuna,
 } = require("../../db/controladores/vacunas");
 
 const preguntasGenerales = [
@@ -97,6 +98,10 @@ const preguntarPersona = async (ciudad) => {
       name: "fechaSegundaDosis",
       message: "Fecha segunda dosis: ",
       type: "input",
+      when: async () => {
+        const vacuna = await getVacuna(preguntasPersona2.vacunaCentro);
+        return vacuna.dosis === 2;
+      },
     },
     {
       name: "anyadirOtraPersona",
