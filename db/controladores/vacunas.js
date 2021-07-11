@@ -22,13 +22,14 @@ const listarVacunasCentro = async (centro) => {
     const vacunasCentro = listaVacunas.filter(({ _id }) =>
       puntoVacunacion.vacunas.find((vacuna) => _id.equals(vacuna))
     );
-    if (vacunasCentro.length === 0) {
+    if (vacunasCentro.length !== 0) {
+      return vacunasCentro.map((vacuna) => ({
+        value: vacuna.nombre,
+        name: vacuna.nombre,
+      }));
+    } else {
       throw new Error();
     }
-    return vacunasCentro.map((vacuna) => ({
-      value: vacuna.nombre,
-      name: vacuna.nombre,
-    }));
   } catch (err) {
     console.log(
       `El centro ${centro} no tiene vacunas disponibles`,
@@ -66,6 +67,10 @@ const introducirVacuna = async (
             )
           ) {
             puntoVacunacionRecorrido.vacunas.push(idVacuna);
+          } else {
+            throw new Error(
+              `\nEl centro ${nombrePuntoVacunacion} ya tiene la vacuna ${nombreVacuna}`
+            );
           }
         }
         return puntoVacunacionRecorrido;
