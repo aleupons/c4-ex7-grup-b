@@ -1,7 +1,9 @@
 const express = require("express");
 
-const { listarPuntosVacunacion } = require("../../db/controladores/ciudades");
-const { getCiudad } = require("../../db/controladores/puntosVacunacion");
+const {
+  listarPuntosVacunacion,
+} = require("../../../db/controladores/ciudades");
+const { getCiudad } = require("../../../db/controladores/puntosVacunacion");
 
 const router = express.Router();
 
