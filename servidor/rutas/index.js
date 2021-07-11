@@ -1,13 +1,8 @@
-const morgan = require("morgan");
 const express = require("express");
-const app = require("./init");
-const { error404, errorGeneral } = require("./errores");
-const rutaParaVacunacion = require("./rutas/index");
+const rutaCentros = require("./puntosVacunacion");
 
-app.use(morgan("dev"));
-app.use(express.json());
+const router = express.Router();
 
-app.use("/vacunacion", rutaParaVacunacion);
+router.use("/centros", rutaCentros);
 
-app.use(error404);
-app.use(errorGeneral);
+module.exports = router;
